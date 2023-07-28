@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  # Node.js service
+  nodejs:
+    build:
+      context: . # The directory where the Dockerfile is located
+      dockerfile: Dockerfile
+    ports:
+      - "3000:8080" # Map host port 3000 to container port 3000
+    depends_on:
+      - mysql # Make sure MySQL container is up before starting the Node.js server
+
+  # MySQL service
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: pizzahub
+      MYSQL_USER: pizzau
+      MYSQL_PASSWORD: pizza!@isthebest
+      MYSQL_ROOT_PASSWORD: rootpassword # Change this to a strong password for production use
+    ports:
+      - "3306:3306" # Map host port 3306 to container port 3306
+    volumes:
+      - mysql_data:/var/lib/mysql # Persist data to a volume
+
+volumes:
+  mysql_data: # Define the named volume for MySQL data persistence
